@@ -33,6 +33,7 @@ export class MainComponent implements OnInit{
       counter += interval;
       timerBar.style.width = `${counter/maxTime * 100}%`
       if (counter >= maxTime){
+        
       timerBar.style.width = `${0}%`
         clearInterval(this.stopwatchInterval);
       }
