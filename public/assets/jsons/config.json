@@ -4,5 +4,19 @@
     ,"music/GTA San Andreas CJ rap.mp3"
     ,"music/In Motion (HD) - From the Soundtrack to The Social Network.mp3"
     ,"music/Total Overdose theme.mp3"
-  ]
+  ],
+  "lables":{
+    "title":"Welcome To Bingo!!!",
+    "connected":"Connected",
+    "notConnected":"Not Connected",
+    "connectionTooltipMgs":"Is Player Connected With Other Player?",
+    "notPlaying":"Not Playing",
+    "playing":"Playing",
+    "playingTooltipMgs":"Is Player Playing?",
+    "yourTurn":"Your Turn",
+    "NotYourTurn":"Not Your Turn"
+  },
+  "timeInterval":15
+
+  
 }

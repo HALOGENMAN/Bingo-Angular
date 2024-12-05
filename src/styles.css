@@ -1,8 +1,9 @@
 :root {
-  --heading-background:#E08040;
+  --heading-background:#e6694c;
   --menu-background: #97b9b9;
   --playground-background:#40E0D0;
   --danger: #800000;
-  --success:#4b5563;
+  /* --success:#4b5563; */
+  --success:green;
   --font-size: 16px;
 }

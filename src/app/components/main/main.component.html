@@ -1,58 +1,68 @@
 <div class="cntnr">
   <div class="heading">
-    <h4 class="pt-2 title"><b>Welcome to Bingo!!</b></h4>
-    <div class="container-fluid mt-2 px-1" style="font-size: 12px;">
-      <div class="row gx-5">
+    <h4 class="text-center"><b>{{lables.title}}</b></h4>
+    <div class="container overflow-hidden text-center mt-1">
+      <div class="row gy-5 gx-5">
         <div class="col-6">
-          <div class="p-1 text-center">
-            <div class="infoBox">
-              <b>Status: Not Connected</b>
+          <div class="p-1">
+            <div class="status connectionStatus"
+             [ngStyle]="{ 'color': connectionStatus ? 'var(--success)' : 'var(--danger)' }"
+             pTooltip={{lables.connectionTooltipMgs}} 
+             tooltipPosition="top"  
+            >
+              {{connectionStatus?lables.connected:lables.notConnected}}
             </div>
           </div>
         </div>
         <div class="col-6">
           <div class="p-1">
-              <b>Status:Connected</b>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="p-1">
-            <div class="infoBox">
-              Status:Connected
+            <div class="row g-1">
+              <div class="col-6">
+                @for (l of life; track index;let index = $index) {
+                  <i class="fa-solid fa-heart m-1 float-end" index [ngStyle]="{'color': index+1<=lifeLeft?'rgb(87, 28, 7)':'white'}"></i>
+                }
+              </div>
+              <div class="col-6">
+                <div class="row g-1">
+                  <div class="col-10">
+                    <div class="timer mt-1">
+                      <div class="timer-bar">
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-2"><i class="fa-solid fa-clock float-end mt-1"></i></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div class="col-6">
-          <div class="p-1">Custom column padding</div>
+          <div class="p-1">
+            <div 
+              class="status playingStatus" 
+              [ngStyle]="{ 'color': playingStatus ? 'var(--success)' : 'var(--danger)' }"
+              pTooltip={{lables.playingTooltipMgs}} 
+              tooltipPosition="top"  
+            >
+              {{playingStatus?lables.playing:lables.notPlaying}}
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="p-1">
+            <div 
+              class="status turnStatus" 
+              [ngStyle]="{ 'background-color': turnStatus ? 'var(--success)' : 'var(--danger)' }"
+              pTooltip={{lables.playingTooltipMgs}} 
+              tooltipPosition="top"  
+            >
+              {{turnStatus?lables.yourTurn:lables.NotYourTurn}}
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <div class="menu-bar">
-    <button type="button" class="btn btn-primary" style="width: 30px; height: 30px;" [disabled]="true">
-      <div style="display: flex; justify-content: center; align-items: center;">
-        <i class="fa-solid fa-play"></i>
-      </div>
-    </button>
-    <button type="button" class="btn btn-primary" style="width: 30px; height: 30px;" [disabled]="true">
-      <div style="display: flex; justify-content: center; align-items: center;">
-        <i class="fa-solid fa-play"></i>
-      </div>
-    </button>
-    <button type="button" class="btn btn-primary" style="width: 30px; height: 30px;" [disabled]="true">
-      <div style="display: flex; justify-content: center; align-items: center;">
-        <i class="fa-solid fa-play"></i>
-      </div>
-    </button>
-    <button type="button" class="btn btn-primary" style="width: 30px; height: 30px;" [disabled]="true">
-      <div style="display: flex; justify-content: center; align-items: center;">
-        <i class="fa-solid fa-play"></i>
-      </div>
-    </button>
-    
-  </div>
-  <div class="playgroung">
-  
   </div>
 </div>
 

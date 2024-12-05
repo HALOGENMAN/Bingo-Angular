@@ -12,6 +12,8 @@ import { CommonModule } from '@angular/common';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
+import { TooltipModule } from 'primeng/tooltip';
+
 export function initializeApp(configService: ConfigService): () => Promise<void> {
   return () => configService.loadConfig();
 }
@@ -29,6 +31,7 @@ export function initializeApp(configService: ConfigService): () => Promise<void>
     BrowserAnimationsModule,
     CommonModule,
     NgbModule,
+    TooltipModule,
   ],
   providers: [
     provideHttpClient(withInterceptors([])),
