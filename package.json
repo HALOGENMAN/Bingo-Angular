@@ -21,6 +21,7 @@
     "@ng-bootstrap/ng-bootstrap": "^17.0.1",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
+    "ng-qrcode": "^18.0.0",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.12",
     "rxjs": "~7.8.0",

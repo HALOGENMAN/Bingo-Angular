@@ -1,1 +1,19 @@
-<p>offer works!</p>
+<div class="overlay" [ngClass]="{ 'active': overlayOpen}" id="overlay">
+  <div class="overlay-content">
+    <div class="closeButton">
+      <button class="btn btn-light" (click)="closeOverlay()">
+        <i class="fa-solid fa-x"></i>
+      </button>
+    </div>
+    <h4 class="text-center mt-2" style="color: white;">
+      <b>
+        {{lables.title}}
+      </b>
+    </h4>
+    <div class="quSection">
+      <qr-code value="{{qrData}}" 
+         size="400" 
+         errorCorrectionLevel="M" />
+    </div>
+  </div>
+</div>

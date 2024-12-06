@@ -11,8 +11,11 @@ import { MainComponent } from './components/main/main.component';
 import { CommonModule } from '@angular/common';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { QrCodeModule } from 'ng-qrcode';
 
 import { TooltipModule } from 'primeng/tooltip';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 export function initializeApp(configService: ConfigService): () => Promise<void> {
   return () => configService.loadConfig();
@@ -32,6 +35,8 @@ export function initializeApp(configService: ConfigService): () => Promise<void>
     CommonModule,
     NgbModule,
     TooltipModule,
+    NgbPopoverModule,
+    QrCodeModule
   ],
   providers: [
     provideHttpClient(withInterceptors([])),

@@ -41,7 +41,7 @@
           <div class="p-1">
             <div 
               class="status playingStatus" 
-              [ngStyle]="{ 'color': playingStatus ? 'var(--success)' : 'var(--danger)' }"
+              [ngStyle]="{ 'color': playingStatus ? 'var(--success)':'var(--danger)'}"
               pTooltip={{lables.playingTooltipMgs}} 
               tooltipPosition="top"  
             >
@@ -64,5 +64,49 @@
       </div>
     </div>
   </div>
+  <div class="menu">
+    <button type="button" class="btn btn-info button"
+      placement="bottom"
+      ngbPopover={{lables.instructionDetails}}
+      popoverTitle={{lables.instructionTitle}}
+    >
+      <i class="fa-solid fa-info"></i>
+    </button>
+    <button type="button" class="btn btn-warning button" (click)="offer()">
+      <i class="fa-solid fa-qrcode"></i>
+    </button>
+    <button type="button" class="btn btn-warning button">
+      <i class="fa-solid fa-camera"></i>
+    </button>
+    <button type="button" class="btn btn-outline-dark button" (click)="changeMusicVolume()">
+      <i class="fa-solid fa-volume-{{volumeType[volumeLevel]}}"></i>
+    </button>
+    <button type="button" class="btn btn-outline-dark button" (click)="changeSong()">
+      <i class="fa-solid fa-{{songNumber}}"></i>
+    </button>
+    <button type="button float-end" class="btn btn-danger button">
+      <i class="fa-solid fa-rotate-right"></i>
+    </button>
+    <button type="button float-end" class="btn btn-light button">
+      <i class="fa-solid fa-play"></i>
+    </button>
+  </div>
+  <div class="boardArea">
+    <div class="board">
+      @for(item of boardNumber; track index;let index = $index){
+        <div class="board-item">
+          <div 
+            class="item-box" 
+            (click)="boxClicked($event,item)" 
+            [ngStyle]="{'background-color':item.clicked?item.matched?'yellow':'brown':'#00A3A3'}"
+          >
+            <b>{{item.number}}</b>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
 </div>
+<audio #songEle src="{{songSrc}}" loop [autoplay]="autoPlay"></audio>
+<app-offer></app-offer>
 

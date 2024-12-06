@@ -1,9 +1,9 @@
 {
   "songs":[
-    "music/Damaui, Brian Michael Hinds & PALMU - Can We Talk About Us.mp3"
-    ,"music/GTA San Andreas CJ rap.mp3"
-    ,"music/In Motion (HD) - From the Soundtrack to The Social Network.mp3"
-    ,"music/Total Overdose theme.mp3"
+    "assets/songs/Damaui, Brian Michael Hinds & PALMU - Can We Talk About Us.mp3"
+    ,"assets/songs/GTA San Andreas CJ rap.mp3"
+    ,"assets/songs/In Motion (HD) - From the Soundtrack to The Social Network.mp3"
+    ,"assets/songs/Total Overdose theme.mp3"
   ],
   "lables":{
     "title":"Welcome To Bingo!!!",
@@ -14,9 +14,13 @@
     "playing":"Playing",
     "playingTooltipMgs":"Is Player Playing?",
     "yourTurn":"Your Turn",
-    "NotYourTurn":"Not Your Turn"
+    "NotYourTurn":"Not Your Turn",
+    "instructionTitle":"Playing Instructions",
+    "instructionDetails":"loremxx sd alsdkmasldkmalda sdlasdmlasdmlas",
+    "offer":{
+      "title":"Let The Other Player Scan The Offer.."
+    }
   },
   "timeInterval":15
-
   
 }
