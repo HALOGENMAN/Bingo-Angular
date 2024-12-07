@@ -1,1 +1,27 @@
-<p>answer works!</p>
+<div class="overlay" [ngClass]="{ 'active': overlayOpen}" id="overlay">
+  <div class="overlay-content">
+    <div class="closeButton">
+      <button class="btn btn-light" (click)="closeOverlay()">
+        <i class="fa-solid fa-x"></i>
+      </button>
+    </div>
+    <h4 class="text-center mt-2" style="color: white;">
+      <b>
+        {{lables.title}}
+      </b>
+    </h4>
+    <div class="quSection">
+      <ngx-scanner-qrcode #action="scanner"></ngx-scanner-qrcode>
+
+<!-- data  -->
+<span>{{ action.data.value | json }}</span><!-- value -->
+<span>{{ action.data | async | json }}</span><!-- async -->
+
+<!-- Loading -->
+<p *ngIf="action.isLoading">⌛ Loading...</p>
+
+<!-- start -->
+<button (click)="action.isStart ? action.stop() : action.start()">{{action.isStart ? 'Stop' : 'Start'}}</button>
+    </div>
+  </div>
+</div>

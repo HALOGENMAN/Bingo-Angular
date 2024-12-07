@@ -1,6 +1,7 @@
 import { Component ,ElementRef,OnInit, ViewChild} from '@angular/core';
 import { ConfigService } from '../../service/config.service';
 import { OfferService } from '../../service/offer.service';
+import { AnswerService } from '../../service/answer.service';
 
 @Component({
   selector: 'app-main',
@@ -30,6 +31,7 @@ export class MainComponent implements OnInit{
   constructor(
     public configService:ConfigService,
     public offerService:OfferService,
+    public answerService:AnswerService
   ){
     this.configs = configService.getConfig()
     this.lables = this.configs.lables;
@@ -190,6 +192,9 @@ export class MainComponent implements OnInit{
 
   offer(){
     this.offerService.open()
+  }
+  answer(){
+    this.answerService.open() 
   }
 
 }

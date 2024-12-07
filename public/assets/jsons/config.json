@@ -18,7 +18,10 @@
     "instructionTitle":"Playing Instructions",
     "instructionDetails":"loremxx sd alsdkmasldkmalda sdlasdmlasdmlas",
     "offer":{
-      "title":"Let The Other Player Scan The Offer.."
+      "title":"Let The Other Player Scan The Offer..."
+    },
+    "answer":{
+      "title":"Please Scan The Offer..."
     }
   },
   "timeInterval":15

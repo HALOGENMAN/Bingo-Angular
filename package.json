@@ -22,6 +22,7 @@
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
     "ng-qrcode": "^18.0.0",
+    "ngx-scanner-qrcode": "^1.7.3",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.12",
     "rxjs": "~7.8.0",

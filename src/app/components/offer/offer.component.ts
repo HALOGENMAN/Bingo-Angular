@@ -8,7 +8,7 @@ import { ConfigService } from '../../service/config.service';
   styleUrl: './offer.component.css'
 })
 export class OfferComponent {
-  overlayOpen = true;
+  overlayOpen = false;
   lables:any;
   configs:any;
   qrData = "In Angular, a Subject is part of RxJS and acts as both an Observable and an Observer. It's often used for communication between components or services and enables event-driven programming."

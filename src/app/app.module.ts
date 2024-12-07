@@ -12,10 +12,13 @@ import { CommonModule } from '@angular/common';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { QrCodeModule } from 'ng-qrcode';
+import { NgxScannerQrcodeModule, LOAD_WASM } from 'ngx-scanner-qrcode';
 
 import { TooltipModule } from 'primeng/tooltip';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 
+
+LOAD_WASM('assets/wasm/ngx-scanner-qrcode.wasm').subscribe();
 
 export function initializeApp(configService: ConfigService): () => Promise<void> {
   return () => configService.loadConfig();
@@ -36,7 +39,8 @@ export function initializeApp(configService: ConfigService): () => Promise<void>
     NgbModule,
     TooltipModule,
     NgbPopoverModule,
-    QrCodeModule
+    QrCodeModule,
+    NgxScannerQrcodeModule
   ],
   providers: [
     provideHttpClient(withInterceptors([])),
