@@ -1,13 +1,14 @@
-import { Component , AfterViewInit, Input, OnInit, ViewChild} from '@angular/core';
+import { Component , AfterViewInit, Input, OnInit, ViewChild , OnDestroy} from '@angular/core';
 import { QrScannerService } from '../../service/qr-scanner.service';
 import { ScannerQRCodeConfig, NgxScannerQrcodeService, ScannerQRCodeSelectedFiles, ScannerQRCodeResult, NgxScannerQrcodeComponent, ScannerQRCodeSymbolType } from 'ngx-scanner-qrcode';
-
+import { AnswerService } from '../../service/answer.service'
+import { OfferService } from '../../service/offer.service';
 @Component({
   selector: 'app-qr-scanner',
   templateUrl: './qr-scanner.component.html',
   styleUrl: './qr-scanner.component.css'
 })
-export class QrScannerComponent implements OnInit, AfterViewInit{
+export class QrScannerComponent implements OnInit, AfterViewInit, OnDestroy{
   @Input() scanType = 'offer'
   qrResult: string | null = null;
 
@@ -18,7 +19,6 @@ export class QrScannerComponent implements OnInit, AfterViewInit{
       },
     }
   }
-
   public qrCodeResult: ScannerQRCodeSelectedFiles[] = [];
   public qrCodeResult2: ScannerQRCodeSelectedFiles[] = [];
   public percentage = 80;
@@ -29,18 +29,43 @@ export class QrScannerComponent implements OnInit, AfterViewInit{
   constructor(
      public qrScannerService:QrScannerService
     ,private qrcode: NgxScannerQrcodeService
+    ,private answerService:AnswerService
+    ,private offerService:OfferService
   ){}
+  ngOnDestroy(): void {
+    this.handle(this.action,'stop');
+  }
   ngOnInit(): void {
+    if(this.scanType=='offer'){
+      this.answerService.showScanner$.subscribe(()=>{
+        this.handle(this.action,'start')
+      })
+      this.answerService.closeScanner$.subscribe(()=>{
+        this.handle(this.action,'stop')
+      })
+    }else{
+      this.offerService.showScanner$.subscribe(()=>{
+        this.handle(this.action,'start')
+      })
+      this.offerService.closeScanner$.subscribe(()=>{
+        this.handle(this.action,'stop')
+      })
+    }
   }
   ngAfterViewInit(): void {
     this.action.isReady.subscribe((res: any) => {
     });
-    this.handle(this.action,'start')
   }
 
    public onEvent(e: ScannerQRCodeResult[], action?: any): void {
-     alert(e[0].value)
-    e && action && this.handle(this.action,'stop');
+    //  alert(e[0].value)
+     e && action && this.handle(this.action,'stop');
+     if(this.scanType=='offer'){
+      this.answerService.closeScanner()
+     }else{
+      this.offerService.closeOverlay()
+     }
+
   }
 
   public handle(action: any, fn: string): void {
@@ -58,6 +83,4 @@ export class QrScannerComponent implements OnInit, AfterViewInit{
       action[fn]().subscribe((r: any) => console.log(fn, r));
     }
   }
-
-  
 }

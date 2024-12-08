@@ -5,7 +5,6 @@ import { OfferComponent } from './offer.component';
 describe('OfferComponent', () => {
   let component: OfferComponent;
   let fixture: ComponentFixture<OfferComponent>;
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [OfferComponent]

@@ -11,9 +11,47 @@
       </b>
     </h4>
     <div class="quSection">
-      <qr-code value="{{qrData}}" 
-         size="400" 
-         errorCorrectionLevel="M" />
+      @if(shoeScanner){
+        <app-qr-scanner [scanType]="'answer'"></app-qr-scanner>
+      }
+      @else{
+        <qr-code value="{{qrData}}" 
+           size="400" 
+           errorCorrectionLevel="M" />
+      }
+    </div>
+    <div class="row d-flex justify-content-center">
+      <div class="input-group mb-3" style="width: 500px;">
+        @if(shoeScanner){
+          <input type="text" class="form-control" #answer   placeholder="Please enter Answer" aria-label="Recipient's username" aria-describedby="button-addon2">
+          <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="enterData(answer)">
+            Enter
+          </button>
+        }@else {
+          <input type="text" class="form-control" [value]="qrData" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
+          <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="copyData()">
+            @if(!copyButtonClicked){
+              <i class="fa-solid fa-copy"></i>
+            }@else {
+              <i class="fa-solid fa-check"></i>
+            }
+          </button>
+        }
+      </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+      <div class="input-group mb-3" style="width: auto;">
+        @if(shoeScanner){
+          <button class="btn btn-warning" (click)="toggleView()">
+            {{lables.ScanAnswer}}
+          </button>
+        }@else {
+          <button class="btn btn-warning" (click)="toggleView()">
+            {{lables.OfferOR}}
+          </button>
+        }
+      </div>
     </div>
   </div>
 </div>
+<p-toast />

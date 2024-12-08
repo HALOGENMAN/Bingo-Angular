@@ -18,6 +18,7 @@ import { NgxScannerQrcodeModule, LOAD_WASM } from 'ngx-scanner-qrcode';
 
 import { TooltipModule } from 'primeng/tooltip';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { ToastModule } from 'primeng/toast';
 
 
 LOAD_WASM('assets/wasm/ngx-scanner-qrcode.wasm').subscribe();
@@ -45,6 +46,7 @@ export function initializeApp(configService: ConfigService): () => Promise<void>
     ,NgbPopoverModule
     ,QrCodeModule
     ,NgxScannerQrcodeModule
+    ,ToastModule
   ],
   providers: [
     provideHttpClient(withInterceptors([])),

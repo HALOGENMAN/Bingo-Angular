@@ -10,8 +10,9 @@
     <!-- isTorch -->
      <div class="col-2 my-1">
        <button class="btn" [class.btn-info]="!action.isStart" [class.btn-warning]="action.isStart" [disabled]="!action.isStart" (click)="action.isTorch = !action.isTorch; handle(action, 'torcher')">
-         <img [src]="action.isTorch ? 'assets/images/flash-off.svg' : 'assets/images/flash-on.svg'" width="30px"/>
-       </button>
+         <!-- <img [src]="action.isTorch ? 'assets/images/flash-off.svg' : 'assets/images/flash-on.svg'" width="30px"/> -->
+         <i class="fa-solid fa-bolt"></i>
+        </button>
      </div>
   </div>
   
