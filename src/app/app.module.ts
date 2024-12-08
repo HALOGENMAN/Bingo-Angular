@@ -7,8 +7,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { OfferComponent } from './components/offer/offer.component';
 import { AnswerComponent } from './components/answer/answer.component';
+import { QrScannerComponent } from './components/qr-scanner/qr-scanner.component'
 import { MainComponent } from './components/main/main.component';
 import { CommonModule } from '@angular/common';
+
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { QrCodeModule } from 'ng-qrcode';
@@ -26,21 +28,23 @@ export function initializeApp(configService: ConfigService): () => Promise<void>
 
 @NgModule({
   declarations: [
-    AppComponent,
-    OfferComponent,
-    AnswerComponent,
-    MainComponent
+     AppComponent
+    ,OfferComponent
+    ,AnswerComponent
+    ,QrScannerComponent
+    ,MainComponent
+    
   ],
   imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    CommonModule,
-    NgbModule,
-    TooltipModule,
-    NgbPopoverModule,
-    QrCodeModule,
-    NgxScannerQrcodeModule
+     BrowserModule
+    ,AppRoutingModule
+    ,BrowserAnimationsModule
+    ,CommonModule
+    ,NgbModule
+    ,TooltipModule
+    ,NgbPopoverModule
+    ,QrCodeModule
+    ,NgxScannerQrcodeModule
   ],
   providers: [
     provideHttpClient(withInterceptors([])),
