@@ -59,6 +59,7 @@ export class QrScannerComponent implements OnInit, AfterViewInit, OnDestroy{
 
    public onEvent(e: ScannerQRCodeResult[], action?: any): void {
     //  alert(e[0].value)
+    console.log(e[0].value) ///resulu of soluton
      e && action && this.handle(this.action,'stop');
      if(this.scanType=='offer'){
       this.answerService.closeScanner()
@@ -77,10 +78,14 @@ export class QrScannerComponent implements OnInit, AfterViewInit, OnDestroy{
     }
 
     if (fn === 'start') {
-      action[fn](playDeviceFacingBack).subscribe((r: any) => console.log(fn, r));
+      action[fn](playDeviceFacingBack).subscribe((r: any) => {
+        
+      });
     } else {
       this.action.isTorch = false
-      action[fn]().subscribe((r: any) => console.log(fn, r));
+      action[fn]().subscribe((r: any) =>{
+
+      });
     }
   }
 }

@@ -46,23 +46,22 @@ export class AnswerComponent implements OnInit,AfterViewInit{
       }
     })
 
-    this.answerService.closeScanner$.subscribe({
-      next:()=>{
-        this.shoeScanner = false
-        this.answerService.closeScanner()
-      }
+    this.answerService.closeScanner$.subscribe(()=>{
+      this.shoeScanner = false
     })
-    
   }
+
   closeOverlay(){
     this.overlayOpen = false
-    this.shoeScanner = false
     this.answerService.closeScanner()
   }
 
   openOverlay(){
     this.overlayOpen = true
-    this.answerService.showScanner()
+    this.shoeScanner = true
+    setTimeout(()=>{
+      this.answerService.showScanner()
+    },10)
   }
   copyData(){
     navigator.clipboard.writeText(this.qrData)

@@ -6,9 +6,14 @@
       </button>
     </div>
     <h4 class="text-center mt-2" style="color: white;">
-      <b>
-        {{lables.title}}
-      </b>
+      @if(shoeScanner){
+        <b>
+          {{lables.title_scanAnswerQr}}
+        </b>
+      }@else {
+        {{lables.title_offerQr}}
+      }
+      
     </h4>
     <div class="quSection">
       @if(shoeScanner){

@@ -6,9 +6,14 @@
       </button>
     </div>
     <h4 class="text-center mt-2" style="color: white;">
-      <b>
-        {{lables.title}}
-      </b>
+      @if(shoeScanner){
+        <b>
+          {{lables.title_scanOfferQR}}
+        </b>
+      }@else {
+        {{lables.title_answerQR}}
+      }
+      
     </h4>
     <div class="quSection">
       @if(shoeScanner){
@@ -23,8 +28,8 @@
     <div class="row d-flex justify-content-center">
       <div class="input-group mb-3" style="width: 500px;">
         @if(shoeScanner){
-          <input type="text" class="form-control" #answer   placeholder="Please enter Answer" aria-label="Recipient's username" aria-describedby="button-addon2">
-          <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="enterData(answer)">
+          <input type="text" class="form-control" #offer   placeholder="Please enter Offer" aria-label="Recipient's username" aria-describedby="button-addon2">
+          <button class="btn btn-outline-secondary" type="button" id="button-addon2" (click)="enterData(offer)">
             Enter
           </button>
         }@else {

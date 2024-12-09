@@ -31,8 +31,9 @@ export class OfferComponent implements OnInit{
       next:()=>{
         this.openOverlay()
         if(this.shoeScanner){
-          this.offerService.closeScanner()
+          this.offerService.showScanner()
         }
+
       }
     })
     this.offerService.closeOverlay$.subscribe({
