@@ -2,6 +2,7 @@ import { Component ,ElementRef,OnInit, ViewChild} from '@angular/core';
 import { ConfigService } from '../../service/config.service';
 import { OfferService } from '../../service/offer.service';
 import { AnswerService } from '../../service/answer.service';
+import { WebrtcService } from '../../service/webrtc.service';
 
 @Component({
   selector: 'app-main',
@@ -29,14 +30,16 @@ export class MainComponent implements OnInit{
   @ViewChild('songEle') songEle!: ElementRef<HTMLAudioElement>;
 
   constructor(
-    public configService:ConfigService,
-    public offerService:OfferService,
-    public answerService:AnswerService
+     public configService:ConfigService
+    ,public offerService:OfferService
+    ,public answerService:AnswerService
+    ,public webrtcService:WebrtcService
   ){
     this.configs = configService.getConfig()
     this.lables = this.configs.lables;
   }
   ngOnInit(): void {
+    this.webrtcService.initializeConnection()
     this.startTimer()
     this.generateBoard()
     this.totalSong = this.configs.songs.length
