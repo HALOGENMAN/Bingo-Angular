@@ -2,6 +2,7 @@ import { Component , OnInit, AfterViewInit} from '@angular/core';
 import { AnswerService } from '../../service/answer.service';
 import { ConfigService } from '../../service/config.service';
 import { MessageService } from 'primeng/api'
+import { WebrtcService } from '../../service/webrtc.service';
 
 
 
@@ -18,11 +19,12 @@ export class AnswerComponent implements OnInit,AfterViewInit{
   configs:any;
   showCopyButton:boolean = true;
   copyButtonClicked = false;
-  qrData = "In Angular, a Subject is part of RxJS and acts as both an Observable and an Observer. It's often used for communication between components or services and enables event-driven programming."
+  qrData = ""
   constructor(
      public configService:ConfigService
     ,public answerService:AnswerService
     ,private messageService: MessageService
+    ,private webrtcService:WebrtcService
   ){
     this.configs = this.configService.getConfig()
     this.lables = this.configs.lables.answer;
@@ -46,8 +48,24 @@ export class AnswerComponent implements OnInit,AfterViewInit{
       }
     })
 
+    // this.webrtcService.connectionStatus$.subscribe({
+    //   next:(data)=>{
+    //     if(data=='open'){
+    //       setTimeout(()=>{
+    //         this.closeOverlay()
+    //       },100)
+    //     }
+    //   }
+    // })
+
     this.answerService.closeScanner$.subscribe(()=>{
       this.shoeScanner = false
+    })
+
+    this.webrtcService.setAnswerSdp$.subscribe({
+      next:(answer)=>{
+        this.qrData = answer
+      }
     })
   }
 
@@ -75,6 +93,7 @@ export class AnswerComponent implements OnInit,AfterViewInit{
     this.messageService.add({ severity: severity, summary: summary, detail: detail });
   }
   enterData(data:any){
-    console.log(data.value)
+    this.shoeScanner = false
+    this.webrtcService.getOfferSdp$.next(JSON.parse(data.value))
   }
 }

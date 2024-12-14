@@ -9,7 +9,9 @@ export class AnswerService {
   showScanner$:Subject<string> = new Subject<string>();
   closeScanner$:Subject<string> = new Subject<string>();
   closeOverlay$:Subject<string> = new Subject<string>();
-  constructor() { }
+  constructor() { 
+    
+  }
   open(){
     this.openOverlay$.next('open')
   }

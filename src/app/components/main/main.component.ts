@@ -195,7 +195,9 @@ export class MainComponent implements OnInit{
 
   offer(){
     this.offerService.open()
+    this.webrtcService.createOffer()
   }
+
   answer(){
     this.answerService.open() 
   }

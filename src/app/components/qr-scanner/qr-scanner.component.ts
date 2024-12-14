@@ -3,6 +3,7 @@ import { QrScannerService } from '../../service/qr-scanner.service';
 import { ScannerQRCodeConfig, NgxScannerQrcodeService, ScannerQRCodeSelectedFiles, ScannerQRCodeResult, NgxScannerQrcodeComponent, ScannerQRCodeSymbolType } from 'ngx-scanner-qrcode';
 import { AnswerService } from '../../service/answer.service'
 import { OfferService } from '../../service/offer.service';
+import { WebrtcService } from '../../service/webrtc.service';
 @Component({
   selector: 'app-qr-scanner',
   templateUrl: './qr-scanner.component.html',
@@ -31,6 +32,7 @@ export class QrScannerComponent implements OnInit, AfterViewInit, OnDestroy{
     ,private qrcode: NgxScannerQrcodeService
     ,private answerService:AnswerService
     ,private offerService:OfferService
+    ,private webrtcService:WebrtcService
   ){}
   ngOnDestroy(): void {
     this.handle(this.action,'stop');
@@ -59,12 +61,15 @@ export class QrScannerComponent implements OnInit, AfterViewInit, OnDestroy{
 
    public onEvent(e: ScannerQRCodeResult[], action?: any): void {
     //  alert(e[0].value)
-    console.log(e[0].value) ///resulu of soluton
+    // console.log(e[0].value) ///resulu of soluton
      e && action && this.handle(this.action,'stop');
      if(this.scanType=='offer'){
+      console.log("getting offer")
+      this.webrtcService.getOfferSdp$.next(JSON.parse(e[0].value))
       this.answerService.closeScanner()
      }else{
-      this.offerService.closeOverlay()
+      this.webrtcService.getAnswerSdp$.next(JSON.parse(e[0].value))
+      // this.offerService.closeOverlay()
      }
 
   }

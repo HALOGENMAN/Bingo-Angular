@@ -2,6 +2,7 @@ import { Component , OnInit} from '@angular/core';
 import { OfferService } from '../../service/offer.service';
 import { ConfigService } from '../../service/config.service';
 import { MessageService } from 'primeng/api';
+import { WebrtcService } from '../../service/webrtc.service';
 
 @Component({
   selector: 'app-offer',
@@ -16,29 +17,43 @@ export class OfferComponent implements OnInit{
   configs:any;
   showCopyButton:boolean = true;
   copyButtonClicked = false;
-  qrData = "In Angular, a Subject is part of RxJS and acts as both an Observable and an Observer. It's often used for communication between components or services and enables event-driven programming."
+  qrData = ""
 
   constructor(
      public configService:ConfigService
     ,public offerService:OfferService
     ,private messageService: MessageService
+    ,private webrtcService:WebrtcService
   ){
     this.configs = this.configService.getConfig()
     this.lables = this.configs.lables.offer;
   }
   ngOnInit(): void {
+
     this.offerService.openOverlay$.subscribe({
       next:()=>{
         this.openOverlay()
         if(this.shoeScanner){
           this.offerService.showScanner()
         }
-
+      }
+    })
+    this.webrtcService.connectionStatus$.subscribe({
+      next:(data)=>{
+        console.log("connection opened",data)
+        if(data=='open'){
+          this.closeOverlay()
+        }
       }
     })
     this.offerService.closeOverlay$.subscribe({
       next:()=>{
         this.closeOverlay()
+      }
+    })
+    this.webrtcService.setOfferSdp$?.subscribe({
+      next:(offer)=>{
+        this.qrData = offer
       }
     })
   }
@@ -64,7 +79,7 @@ export class OfferComponent implements OnInit{
     this.messageService.add({ severity: severity, summary: summary, detail: detail });
   }
   enterData(data:any){
-    console.log(data.value)
+    this.webrtcService.getAnswerSdp$.next(JSON.parse(data.value))
   }
   toggleView(){
     this.shoeScanner = !this.shoeScanner;
