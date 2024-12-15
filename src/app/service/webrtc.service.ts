@@ -10,6 +10,7 @@ export class WebrtcService {
   peerConnection: RTCPeerConnection | null = null;
   offetSdp:any = null
   configuration: RTCConfiguration;
+  dataChannel:RTCDataChannel | null = null;;
   typeOfSdp:string="";
   setOfferSdp$:Subject<string>  = new Subject<string>()
   setAnswerSdp$:Subject<string> = new Subject<string>()
@@ -26,7 +27,6 @@ export class WebrtcService {
   }
 
   initializeConnection(): void {
-    console.log("initilizing connection")
     this.peerConnection = new RTCPeerConnection(this.configuration)
     this.peerConnection.onicecandidate = (e) =>{
       if(this.typeOfSdp == 'offer'){
@@ -73,18 +73,22 @@ export class WebrtcService {
   }
   
   dataChannelInit(dataChannel:RTCDataChannel){
-    // dataChannel.onmessage = (e:any) =>  {
-    //   this.getMessage$.next(e.data)
-    // }
-    dataChannel.onopen = (e:any) =>{ 
-      console.log("opennn")
-      this.connectionStatus$.next("open")
-
+    this.dataChannel = dataChannel;
+    dataChannel.onmessage = (e:any) =>  {
+      console.log("recived message::",e.data)
+      this.getMessage$.next(e.data)
     }
-    // dataChannel.onclose =(e:any) => this.connectionStatus$.next("close")
+    dataChannel.onopen = (e:any) =>{ 
+      this.connectionStatus$.next("open")
+    }
+    dataChannel.onclose =(e:any) => this.connectionStatus$.next("close")
     
     // dataChannel.onopen = (e:any) => console.log("open!!!")
     // dataChannel.onclose =(e:any) => this.connectionStatus$.next("close")
+  }
+
+  sendMessage(message:string){
+    this.dataChannel?.send(message)
   }
 
 }

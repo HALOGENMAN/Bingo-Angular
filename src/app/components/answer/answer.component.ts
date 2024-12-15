@@ -1,8 +1,9 @@
-import { Component , OnInit, AfterViewInit} from '@angular/core';
+import { Component , OnInit, AfterViewInit, NgZone} from '@angular/core';
 import { AnswerService } from '../../service/answer.service';
 import { ConfigService } from '../../service/config.service';
 import { MessageService } from 'primeng/api'
 import { WebrtcService } from '../../service/webrtc.service';
+
 
 
 
@@ -25,6 +26,7 @@ export class AnswerComponent implements OnInit,AfterViewInit{
     ,public answerService:AnswerService
     ,private messageService: MessageService
     ,private webrtcService:WebrtcService
+    ,private ngZone: NgZone
   ){
     this.configs = this.configService.getConfig()
     this.lables = this.configs.lables.answer;
@@ -48,15 +50,13 @@ export class AnswerComponent implements OnInit,AfterViewInit{
       }
     })
 
-    // this.webrtcService.connectionStatus$.subscribe({
-    //   next:(data)=>{
-    //     if(data=='open'){
-    //       setTimeout(()=>{
-    //         this.closeOverlay()
-    //       },100)
-    //     }
-    //   }
-    // })
+    this.webrtcService.connectionStatus$.subscribe({
+      next:(data)=>{
+        if(data=='open' && this.overlayOpen){
+          this.closeOverlay()
+        }
+      }
+    })
 
     this.answerService.closeScanner$.subscribe(()=>{
       this.shoeScanner = false
@@ -64,14 +64,18 @@ export class AnswerComponent implements OnInit,AfterViewInit{
 
     this.webrtcService.setAnswerSdp$.subscribe({
       next:(answer)=>{
-        this.qrData = answer
+        setTimeout(()=>{
+          this.ngZone.run(()=>{
+            this.qrData = answer
+          })
+        },10)
       }
     })
   }
 
   closeOverlay(){
-    this.overlayOpen = false
     this.answerService.closeScanner()
+    this.overlayOpen = false
   }
 
   openOverlay(){
@@ -85,9 +89,11 @@ export class AnswerComponent implements OnInit,AfterViewInit{
     navigator.clipboard.writeText(this.qrData)
     this.copyButtonClicked = true;
     setTimeout(() => {
-      this.copyButtonClicked = false;
-      this.toast('info','Info','Text Copied')
-    }, 10); 
+      this.ngZone.run(()=>{
+        this.copyButtonClicked = false;
+        this.toast('info','Info','Answer Copied')
+      })
+    }, 100); 
   }
   toast(severity:string,summary:string,detail:string){
     this.messageService.add({ severity: severity, summary: summary, detail: detail });

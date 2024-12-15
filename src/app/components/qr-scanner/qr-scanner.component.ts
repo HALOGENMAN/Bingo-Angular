@@ -69,7 +69,7 @@ export class QrScannerComponent implements OnInit, AfterViewInit, OnDestroy{
       this.answerService.closeScanner()
      }else{
       this.webrtcService.getAnswerSdp$.next(JSON.parse(e[0].value))
-      // this.offerService.closeOverlay()
+      this.offerService.closeOverlay()
      }
 
   }

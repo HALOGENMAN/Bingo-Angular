@@ -3,16 +3,19 @@ import { ConfigService } from '../../service/config.service';
 import { OfferService } from '../../service/offer.service';
 import { AnswerService } from '../../service/answer.service';
 import { WebrtcService } from '../../service/webrtc.service';
+import { MessageService } from 'primeng/api'
+
 
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
-  styleUrl: './main.component.css'
+  styleUrl: './main.component.css',
+  providers:[MessageService]
 })
 export class MainComponent implements OnInit{
   lables:any;
   configs:any;
-  connectionStatus:boolean = true;
+  connectionStatus:boolean = false;
   playingStatus:boolean = false
   turnStatus:boolean = false
   stopwatchInterval:any;
@@ -34,6 +37,7 @@ export class MainComponent implements OnInit{
     ,public offerService:OfferService
     ,public answerService:AnswerService
     ,public webrtcService:WebrtcService
+    ,private messageService:MessageService
   ){
     this.configs = configService.getConfig()
     this.lables = this.configs.lables;
@@ -44,6 +48,17 @@ export class MainComponent implements OnInit{
     this.generateBoard()
     this.totalSong = this.configs.songs.length
     this.songSrc = this.configs.songs[this.songNumber-1]
+    this.webrtcService.connectionStatus$.subscribe({
+      next:(data)=>{
+        if(data=='open'){
+          this.connectionStatus = true
+          this.toast('success','Connected','Connected with other player')
+        }
+        if(data=='close'){
+          this.connectionStatus = false
+        }
+      }
+    })
   }
 
 
@@ -73,6 +88,7 @@ export class MainComponent implements OnInit{
     if(item.clicked) return;
     item.clicked = true
     this.mainAlgorithm()
+    this.webrtcService.sendMessage(`${item.number}`)
   }
 
   startTimer(){
@@ -200,6 +216,10 @@ export class MainComponent implements OnInit{
 
   answer(){
     this.answerService.open() 
+  }
+
+  toast(severity:string,summary:string,detail:string){
+    this.messageService.add({ severity: severity, summary: summary, detail: detail });
   }
 
 }

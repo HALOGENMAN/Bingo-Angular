@@ -1,4 +1,4 @@
-import { Component , OnInit} from '@angular/core';
+import { Component , OnInit, NgZone} from '@angular/core';
 import { OfferService } from '../../service/offer.service';
 import { ConfigService } from '../../service/config.service';
 import { MessageService } from 'primeng/api';
@@ -24,6 +24,7 @@ export class OfferComponent implements OnInit{
     ,public offerService:OfferService
     ,private messageService: MessageService
     ,private webrtcService:WebrtcService
+    ,private ngZone: NgZone
   ){
     this.configs = this.configService.getConfig()
     this.lables = this.configs.lables.offer;
@@ -38,22 +39,28 @@ export class OfferComponent implements OnInit{
         }
       }
     })
-    this.webrtcService.connectionStatus$.subscribe({
-      next:(data)=>{
-        console.log("connection opened",data)
-        if(data=='open'){
-          this.closeOverlay()
-        }
-      }
-    })
+    
     this.offerService.closeOverlay$.subscribe({
       next:()=>{
         this.closeOverlay()
       }
     })
+
+    this.webrtcService.connectionStatus$.subscribe({
+      next:(data)=>{
+        if(data=='open' && this.overlayOpen){
+          this.closeOverlay()
+        }
+      }
+    })
+
     this.webrtcService.setOfferSdp$?.subscribe({
       next:(offer)=>{
-        this.qrData = offer
+        setTimeout(()=>{
+          this.ngZone.run(()=>{
+            this.qrData = offer
+          })
+        },10)
       }
     })
   }
@@ -70,10 +77,13 @@ export class OfferComponent implements OnInit{
   copyData(){
     navigator.clipboard.writeText(this.qrData)
     this.copyButtonClicked = true;
+    
     setTimeout(() => {
-      this.copyButtonClicked = false;
-      this.toast('info','Info','Text Copied')
-    }, 10); 
+      this.ngZone.run(()=>{
+        this.copyButtonClicked = false;
+        this.toast('info','Info','Offer Copied')
+      })
+    }, 100); 
   }
   toast(severity:string,summary:string,detail:string){
     this.messageService.add({ severity: severity, summary: summary, detail: detail });
