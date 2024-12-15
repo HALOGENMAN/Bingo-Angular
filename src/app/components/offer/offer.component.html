@@ -50,11 +50,12 @@
       <div class="input-group mb-3" style="width: auto;">
         @if(shoeScanner){
           <button class="btn btn-warning" (click)="toggleView()">
-            {{lables.ScanAnswer}}
+            {{lables.OfferOR}}
+
           </button>
         }@else {
           <button class="btn btn-warning" (click)="toggleView()">
-            {{lables.OfferOR}}
+            {{lables.ScanAnswer}}
           </button>
         }
       </div>

@@ -34,6 +34,15 @@
       { "urls": "stun:stun.l.google.com:19302" }
     ]
   },
-  "timeInterval":15
+  "timeInterval":15,
+  "plzStartGame":"Please Start The Game",
+  "didntStrtGame":"Other Player Did't Started The Game",
+  "gameEvents":{
+    "boedClicked":1,
+    "startGame":2,
+    "didntStartGame":3,
+    "youWon":3
+
+  }
   
 }

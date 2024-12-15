@@ -1,5 +1,4 @@
 import { Component , AfterViewInit, Input, OnInit, ViewChild , OnDestroy} from '@angular/core';
-import { QrScannerService } from '../../service/qr-scanner.service';
 import { ScannerQRCodeConfig, NgxScannerQrcodeService, ScannerQRCodeSelectedFiles, ScannerQRCodeResult, NgxScannerQrcodeComponent, ScannerQRCodeSymbolType } from 'ngx-scanner-qrcode';
 import { AnswerService } from '../../service/answer.service'
 import { OfferService } from '../../service/offer.service';
@@ -28,8 +27,7 @@ export class QrScannerComponent implements OnInit, AfterViewInit, OnDestroy{
   @ViewChild('action') action!: NgxScannerQrcodeComponent;
 
   constructor(
-     public qrScannerService:QrScannerService
-    ,private qrcode: NgxScannerQrcodeService
+     private qrcode: NgxScannerQrcodeService
     ,private answerService:AnswerService
     ,private offerService:OfferService
     ,private webrtcService:WebrtcService

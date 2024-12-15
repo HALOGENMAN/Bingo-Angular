@@ -1,10 +1,10 @@
-import { Component ,ElementRef,OnInit, ViewChild} from '@angular/core';
+import { Component ,ElementRef,OnInit, ViewChild,ChangeDetectorRef} from '@angular/core';
 import { ConfigService } from '../../service/config.service';
 import { OfferService } from '../../service/offer.service';
 import { AnswerService } from '../../service/answer.service';
 import { WebrtcService } from '../../service/webrtc.service';
 import { MessageService } from 'primeng/api'
-
+import { GameEventsService } from '../../service/game-events.service'
 
 @Component({
   selector: 'app-main',
@@ -29,6 +29,7 @@ export class MainComponent implements OnInit{
   songSrc = ''
   autoPlay = false
   boardNumber:any[] = [];
+  gameEvents:any;
 
   @ViewChild('songEle') songEle!: ElementRef<HTMLAudioElement>;
 
@@ -38,13 +39,15 @@ export class MainComponent implements OnInit{
     ,public answerService:AnswerService
     ,public webrtcService:WebrtcService
     ,private messageService:MessageService
+    ,private cd:ChangeDetectorRef
+    ,private gameEventsService:GameEventsService
   ){
     this.configs = configService.getConfig()
     this.lables = this.configs.lables;
+    this.gameEvents = this.configs.gameEvents
   }
   ngOnInit(): void {
     this.webrtcService.initializeConnection()
-    this.startTimer()
     this.generateBoard()
     this.totalSong = this.configs.songs.length
     this.songSrc = this.configs.songs[this.songNumber-1]
@@ -57,6 +60,12 @@ export class MainComponent implements OnInit{
         if(data=='close'){
           this.connectionStatus = false
         }
+      }
+    })
+    this.webrtcService.getMessage$.subscribe({
+      next:payload=>{
+        console.log("payload at:",payload)
+        this.recivedMessage(payload)
       }
     })
   }
@@ -84,25 +93,28 @@ export class MainComponent implements OnInit{
   boxClicked(event:Event,item:any){
     event.preventDefault();
     event.stopPropagation()
-    if(this.turnStatus) return;
+    if(!this.turnStatus) return;
     if(item.clicked) return;
     item.clicked = true
     this.mainAlgorithm()
-    this.webrtcService.sendMessage(`${item.number}`)
+    this.webrtcService.sendMessage({
+      event:this.gameEvents.boedClicked,
+      message:item.number
+    })
   }
 
-  startTimer(){
+  startTimer(fn:any){
+    console.log("timer started")
     let counter = 0;
     const maxTime = this.configs.timeInterval  * 100;
     let timerBar:HTMLElement = document.querySelector('.timer-bar') as HTMLElement
     const interval = 1;
-    clearInterval(this.stopwatchInterval);
     this.stopwatchInterval = setInterval(() => {
       counter += interval;
       timerBar.style.width = `${counter/maxTime * 100}%`
       if (counter >= maxTime){
-        
-      timerBar.style.width = `${0}%`
+        fn()
+        timerBar.style.width = `${0}%`
         clearInterval(this.stopwatchInterval);
       }
     }, interval);
@@ -220,6 +232,52 @@ export class MainComponent implements OnInit{
 
   toast(severity:string,summary:string,detail:string){
     this.messageService.add({ severity: severity, summary: summary, detail: detail });
+  }
+
+  
+  recivedMessage(payload:any){
+    if(this.gameEventsService.isBoedClickedEvent(payload)){
+      this.boardClickedByOtherPlayer(payload.message)
+    } else if(this.gameEventsService.startGameEvent(payload)){
+      this.startGameTurn(payload)
+    } else if(this.gameEventsService.didntStrtGameEvent(payload)){
+      this.webrtcService.sendMessage({
+        event:this.gameEvents.startGame,
+        message:this.configs.plzStartGame
+      })
+    }
+    
+    this.cd.detectChanges()
+  }
+
+  boardClickedByOtherPlayer(number:number){
+    let index = this.boardNumber.findIndex(e=>{
+      return e.number === Number(number)
+    })
+    this.boardNumber[index].clicked = true
+    this.mainAlgorithm()
+  }
+
+  startGameTurn(payload:any){
+    this.turnStatus = true
+    this.toast('info','Strat Game!!',payload.message)
+    this.startTimer(()=>{
+      this.turnStatus = false
+      this.webrtcService.sendMessage({
+        event:this.gameEvents.startGame,
+        message:this.configs.didntStrtGame
+      })
+    })
+  }
+  resetBoard(){
+    this.generateBoard()
+  }
+
+  startGame(){
+    if(!this.connectionStatus){
+      this.toast('error','Not Connected','Please connect with other player to start the game..')
+      return;
+    }
   }
 
 }

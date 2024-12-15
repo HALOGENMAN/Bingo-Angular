@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { QrScannerService } from './qr-scanner.service';
+import { GameEventsService } from './game-events.service';
 
-describe('QrScannerService', () => {
-  let service: QrScannerService;
+describe('GameEventsService', () => {
+  let service: GameEventsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(QrScannerService);
+    service = TestBed.inject(GameEventsService);
   });
 
   it('should be created', () => {

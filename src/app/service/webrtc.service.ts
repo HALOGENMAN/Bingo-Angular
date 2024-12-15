@@ -7,6 +7,7 @@ import { ConfigService } from './config.service';
 })
 export class WebrtcService {
   configs:any
+  gameEvents:any;
   peerConnection: RTCPeerConnection | null = null;
   offetSdp:any = null
   configuration: RTCConfiguration;
@@ -24,6 +25,7 @@ export class WebrtcService {
   ) { 
     this.configs = this.configService.getConfig();
     this.configuration =  this.configs.webRtcConfig;
+    this.gameEvents = this.configs.gameEvents
   }
 
   initializeConnection(): void {
@@ -76,19 +78,23 @@ export class WebrtcService {
     this.dataChannel = dataChannel;
     dataChannel.onmessage = (e:any) =>  {
       console.log("recived message::",e.data)
-      this.getMessage$.next(e.data)
+      this.getMessage$.next(JSON.parse(e.data))
     }
     dataChannel.onopen = (e:any) =>{ 
       this.connectionStatus$.next("open")
+      if(this.typeOfSdp=='offer'){
+        this.sendMessage({
+          event:this.gameEvents.startGame,
+          message:this.configs.plzStartGame
+        })
+      }
     }
     dataChannel.onclose =(e:any) => this.connectionStatus$.next("close")
     
-    // dataChannel.onopen = (e:any) => console.log("open!!!")
-    // dataChannel.onclose =(e:any) => this.connectionStatus$.next("close")
   }
 
-  sendMessage(message:string){
-    this.dataChannel?.send(message)
+  sendMessage(message:any){
+    this.dataChannel?.send(JSON.stringify(message))
   }
 
 }
