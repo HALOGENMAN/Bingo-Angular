@@ -40,7 +40,8 @@
   "gameEvents":{
     "boedClicked":1,
     "startGame":2,
-    "didntStartGame":3,
+    "gameStarted":3,
+    "chanceMissed":4,
     "youWon":3
 
   }

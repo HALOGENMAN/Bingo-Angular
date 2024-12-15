@@ -77,7 +77,6 @@ export class WebrtcService {
   dataChannelInit(dataChannel:RTCDataChannel){
     this.dataChannel = dataChannel;
     dataChannel.onmessage = (e:any) =>  {
-      console.log("recived message::",e.data)
       this.getMessage$.next(JSON.parse(e.data))
     }
     dataChannel.onopen = (e:any) =>{ 

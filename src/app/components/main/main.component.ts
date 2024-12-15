@@ -1,4 +1,4 @@
-import { Component ,ElementRef,OnInit, ViewChild,ChangeDetectorRef} from '@angular/core';
+import { Component ,ElementRef,OnInit, ViewChild,ChangeDetectorRef, NgZone} from '@angular/core';
 import { ConfigService } from '../../service/config.service';
 import { OfferService } from '../../service/offer.service';
 import { AnswerService } from '../../service/answer.service';
@@ -41,6 +41,7 @@ export class MainComponent implements OnInit{
     ,private messageService:MessageService
     ,private cd:ChangeDetectorRef
     ,private gameEventsService:GameEventsService
+    ,private ngZone: NgZone
   ){
     this.configs = configService.getConfig()
     this.lables = this.configs.lables;
@@ -90,25 +91,14 @@ export class MainComponent implements OnInit{
 
   }
 
-  boxClicked(event:Event,item:any){
-    event.preventDefault();
-    event.stopPropagation()
-    if(!this.turnStatus) return;
-    if(item.clicked) return;
-    item.clicked = true
-    this.mainAlgorithm()
-    this.webrtcService.sendMessage({
-      event:this.gameEvents.boedClicked,
-      message:item.number
-    })
-  }
+  
 
   startTimer(fn:any){
-    console.log("timer started")
     let counter = 0;
     const maxTime = this.configs.timeInterval  * 100;
     let timerBar:HTMLElement = document.querySelector('.timer-bar') as HTMLElement
     const interval = 1;
+    clearInterval(this.stopwatchInterval)
     this.stopwatchInterval = setInterval(() => {
       counter += interval;
       timerBar.style.width = `${counter/maxTime * 100}%`
@@ -240,14 +230,28 @@ export class MainComponent implements OnInit{
       this.boardClickedByOtherPlayer(payload.message)
     } else if(this.gameEventsService.startGameEvent(payload)){
       this.startGameTurn(payload)
-    } else if(this.gameEventsService.didntStrtGameEvent(payload)){
-      this.webrtcService.sendMessage({
-        event:this.gameEvents.startGame,
-        message:this.configs.plzStartGame
-      })
+    } else if(this.gameEventsService.gameStartedEvent(payload)){
+      this.gameStarted(payload)
+    } else if(this.gameEventsService.chanceMissedEvent(payload)){
+      this.chanceMissed(payload)
     }
     
     this.cd.detectChanges()
+  }
+
+  boxClicked(event:Event,item:any){
+    event.preventDefault();
+    event.stopPropagation()
+    if(!this.turnStatus) return;
+    if(item.clicked) return;
+    this.turnStatus = false;
+    item.clicked = true
+    clearTimeout(this.stopwatchInterval)
+    this.mainAlgorithm()
+    this.webrtcService.sendMessage({
+      event:this.gameEvents.boedClicked,
+      message:item.number
+    })
   }
 
   boardClickedByOtherPlayer(number:number){
@@ -255,14 +259,21 @@ export class MainComponent implements OnInit{
       return e.number === Number(number)
     })
     this.boardNumber[index].clicked = true
+    this.turnStatus = true;
     this.mainAlgorithm()
+    this.chanceMissedCall()
+    
   }
 
   startGameTurn(payload:any){
+    if(this.playingStatus) return
     this.turnStatus = true
     this.toast('info','Strat Game!!',payload.message)
     this.startTimer(()=>{
-      this.turnStatus = false
+      this.ngZone.run(()=>{
+        this.turnStatus = false
+      })
+      
       this.webrtcService.sendMessage({
         event:this.gameEvents.startGame,
         message:this.configs.didntStrtGame
@@ -278,6 +289,49 @@ export class MainComponent implements OnInit{
       this.toast('error','Not Connected','Please connect with other player to start the game..')
       return;
     }
+    if(this.playingStatus){
+      this.toast('error','In Game','Already In A game Can Not Start Again..')
+      return;
+    }
+    if(!this.turnStatus){
+      this.toast('error','Not Your Turn','Please Wait For Your Turn..')
+      return;
+    }
+    this.playingStatus = true
+    this.resetBoard();
+    
+    this.webrtcService.sendMessage({
+      event:this.gameEvents.gameStarted,
+      message:"Game started please wait for your turn..."
+    })
+
+    this.startTimer(()=>{
+      
+    })
+
+  }
+  gameStarted(payload:any){
+    this.playingStatus = true;
+    this.resetBoard();
+    this.toast('info','Game Started',payload.message)
+  }
+
+  chanceMissed(payload:any){
+    this.turnStatus = true;
+    this.toast('info','Chance Missed',payload.message)
+    this.chanceMissedCall()
+  }
+
+  chanceMissedCall(){
+    this.startTimer(()=>{
+      this.ngZone.run(()=>{
+        this.turnStatus = false;
+      })
+      this.webrtcService.sendMessage({
+        event:this.gameEvents.chanceMissed,
+        message:'Other Player missed the chance...'
+      })
+    })
   }
 
 }

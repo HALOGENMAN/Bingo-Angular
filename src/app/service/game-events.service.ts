@@ -20,7 +20,11 @@ export class GameEventsService {
   startGameEvent(payload:any){
     return payload.event === this.gameEvents.startGame
   }
-  didntStrtGameEvent(payload:any){
-    return payload.event === this.gameEvents.didntStartGame
+  gameStartedEvent(payload:any){
+    return payload.event === this.gameEvents.gameStarted
+  }
+
+  chanceMissedEvent(payload:any){
+    return payload.event === this.gameEvents.chanceMissed
   }
 }

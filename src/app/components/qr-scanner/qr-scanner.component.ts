@@ -62,7 +62,6 @@ export class QrScannerComponent implements OnInit, AfterViewInit, OnDestroy{
     // console.log(e[0].value) ///resulu of soluton
      e && action && this.handle(this.action,'stop');
      if(this.scanType=='offer'){
-      console.log("getting offer")
       this.webrtcService.getOfferSdp$.next(JSON.parse(e[0].value))
       this.answerService.closeScanner()
      }else{
